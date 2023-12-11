@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from app.supabase.supabase import supabase
 
 test = APIRouter()
 
