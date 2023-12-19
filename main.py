@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from app.api.test import test as test_router
+from app.api.foods import foods as foods_router
 
 app = FastAPI()
 
-app.include_router(test_router)
-
+# Routers
+app.include_router(foods_router, prefix="/food", tags=["foods"])
