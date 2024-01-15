@@ -13,8 +13,8 @@ async def obtener_grafico_ventas():
 
     # Creando el gráfico de barras con líneas
     plt.figure(figsize=(12, 6))
-    plt.bar(dias, ventas, color='lightblue', label='Ventas')
-    plt.plot(dias, ventas, color='blue', marker='o', linestyle='-', linewidth=2, markersize=6)
+    plt.bar(dias, ventas, color='#ff8186', label='Ventas')  # Cambiado a 'firebrick'
+    plt.plot(dias, ventas, color='darkred', marker='o', linestyle='-', linewidth=2, markersize=6)  # Cambiado a 'crimson'
     plt.xlabel('Días')
     plt.ylabel('Ventas')
     plt.title('Ventas por Día')
@@ -40,11 +40,11 @@ async def obtener_grafico_ventas():
 
     # Creando el gráfico de barras con líneas
     plt.figure(figsize=(12, 6))
-    plt.bar(dias, ventas, color='lightblue', label='Productos')
-    plt.plot(dias, ventas, color='blue', marker='o', linestyle='-', linewidth=2, markersize=6)
+    plt.bar(dias, ventas, color='#ff8186', label='Ventas')  # Cambiado a 'firebrick'
+    plt.plot(dias, ventas, color='darkred', marker='o', linestyle='-', linewidth=2, markersize=6)  # Cambiado a 'crimson'
     plt.xlabel('Días')
-    plt.ylabel('Almacén')
-    plt.title('Cantidad de productos en almacen')
+    plt.ylabel('Ventas')
+    plt.title('Ventas por Día')
     plt.xticks(dias)
     plt.legend()
     plt.grid(True)
@@ -54,6 +54,7 @@ async def obtener_grafico_ventas():
     plt.savefig(buf, format='png')
     buf.seek(0)
     plt.close()
+    print("aa")
 
     # Devolviendo la imagen como respuesta
     return Response(content=buf.getvalue(), media_type="image/png")
