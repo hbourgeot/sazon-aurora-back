@@ -1,17 +1,17 @@
 from app.supabase import supabase
 
 
-def get_foods():
-    res = supabase.from_("foods").select("*").execute()
-    print(res)
+def get_providers():
+    res = supabase.from_("providers").select("*").execute()
+    return res
 
 
-def get_food_by_id(food_id: int):
-    res = supabase.from_("foods").select("*").eq("id", food_id)
-    print(res)
+def get_provider_by_id(provider_id: int):
+    res = supabase.from_("providers").select("*").eq("id", provider_id).execute()
+    return res.data
 
 
-def upsert_food(data):
-    res = supabase.table("foods").upsert(data)
-    print(res)
+def upsert_provider(data):
+    res = supabase.table("providers").insert(data).execute()
+    return res.data
 
