@@ -54,7 +54,6 @@ class Product(BaseModel):
 
 
 class Provider(BaseModel):
-    id: int
     name: str
     contact: str
     contact_type: Optional[str] = None
