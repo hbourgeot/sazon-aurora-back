@@ -12,6 +12,6 @@ def get_provider_by_id(provider_id: int):
 
 
 def upsert_provider(data):
-    res = supabase.table("providers").insert(data).execute()
+    res = supabase.table("providers").upsert(data).execute()
     return res.data
 
