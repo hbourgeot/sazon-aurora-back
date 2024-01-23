@@ -1,4 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
+import app.supabase.functions.products as products_table
+from app.schemas import Product
 
 products = APIRouter()
 
@@ -6,18 +8,36 @@ products = APIRouter()
 # Routes
 @products.get("/all")
 def get_products():
-    return {"take": []}
+    return products_table.get_foods()
 
 
-@products.get("/{id}")
-def get_product(id: int):
-    return {"take":id}
+@products.get("/{product_id}")
+def get_product(product_id: int):
+    return products_table.get_food_by_id(product_id)
 
 
 @products.post("/new")
-def create_product():
-    return {"message": "Hey"}
+def create_product(prod: Product):
+    product_dict = prod.model_dump()
+    product = products_table.upsert_food(product_dict)
+    if product is not None:
+        return product
 
-@products.put("/{id}")
-def update_product(id: int):
-    return {"message": "up"}
+    raise HTTPException(status_code=400, detail="Product Bad Request")
+
+
+@products.put("/{prod_id}")
+def update_product(prod_id: int, prod: Product):
+    product_dict = prod.model_dump()
+
+    existing_prod = products_table.get_food_by_id(prod_id)
+    if existing_prod is None:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    product_dict["id"] = prod_id
+    prov_response = products_table.upsert_food(product_dict)
+
+    if prov_response is not None:
+        return prov_response
+
+    raise HTTPException(status_code=400, detail="Product bad request")
