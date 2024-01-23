@@ -46,7 +46,6 @@ class FoodProduct(BaseModel):
 
 
 class Product(BaseModel):
-    id: int
     name: str
     description: Optional[str] = None
     stock: int
