@@ -13,7 +13,6 @@ class User(BaseModel):
 
 
 class Food(BaseModel):
-    id: int
     created_at: datetime
     name: str
     description: Optional[str] = None
