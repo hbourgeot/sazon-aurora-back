@@ -9,15 +9,13 @@ foods = APIRouter()
 @foods.get("/all")
 def get_foods():
     res = food_table.get_foods()
-    foods = res.model_dump()
-    return {"foods": foods}
+    return res
 
 
 @foods.get("/{id}")
 def get_food(food_id: int):
     res = food_table.get_food_by_id(food_id)
-    food = res.model_dump()
-    return {"food":food}
+    return res
 
 
 @foods.post("/new")
@@ -31,8 +29,7 @@ def create_food(food: Food):
             "description": food.description
         }
         result = food_table.upsert_food(food_dict)
-        res = {"data": result.data}
-        return res
+        return result
     except Exception as ex:
         return {"error": str(ex)}
 
