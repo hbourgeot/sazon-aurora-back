@@ -2,7 +2,10 @@ from app.supabase import supabase
 
 
 def get_foods():
-    res = supabase.from_("foods").select("*").execute()
+    res = supabase.from_("foods").select("""
+            *,
+            food_products_food_id(amount, product:product_id(name, id)
+            """).execute()
     return res.data
 
 
