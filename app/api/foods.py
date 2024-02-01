@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.schemas import Food
-from app.supabase.functions import foods as food_table
+from app.supabase.functions import foods as food_table, food_product as food_product_table
 
 foods = APIRouter()
 
@@ -24,14 +24,14 @@ def create_food(food: Food):
         food_dict = {
             "name": food.name,
             "price": food.price,
-            "id": food.id,
             "created_at": food.created_at.isoformat(),
             "description": food.description
         }
         result = food_table.upsert_food(food_dict)
+        
         return result
     except Exception as ex:
-        return {"error": str(ex)}
+        return {"error": str(ex)}, 500
 
 
 @foods.patch("/{id}")
@@ -59,3 +59,17 @@ def update_food(food: Food, food_id: int):
         return res
     except Exception as ex:
         raise HTTPException(status_code=500, detail=str(ex))
+    
+    
+@foods.post("/{food_id}/product/{product_id}")
+def add_product_to_food(food_id: int, product_id: int, quantity: int = 1):
+    try:
+        food_product_dict = {
+            "food_id": food_id,
+            "product_id": product_id,
+            "amount": quantity
+        }
+        res = food_product_table.upsert_food_product(food_product_dict)
+        return res
+    except Exception as ex:
+        return {"error": str(ex)}
