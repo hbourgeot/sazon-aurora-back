@@ -2,13 +2,13 @@ from app.supabase import supabase
 
 
 def get_roles():
-    res = supabase.from_("roles").select("*").execute()
+    res = supabase.table("roles").select("*").execute()
     print(res)
     return res
 
 
 def get_role_by_id(role_id: int):
-    res = supabase.from_("roles").select("*").eq("id", role_id).execute()
+    res = supabase.table("roles").select("*").eq("id", role_id).execute()
     print(res)
     return res
 

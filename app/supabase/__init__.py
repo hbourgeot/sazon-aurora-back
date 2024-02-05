@@ -11,3 +11,4 @@ api_key: str = os.getenv("SUPABASE_KEY")
 
 # Initialize the supabase client for the project
 supabase: Client = create_client(url, api_key)
+

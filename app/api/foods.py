@@ -34,18 +34,23 @@ def create_food(food: Food):
         return {"error": str(ex)}, 500
 
 
-@foods.patch("/{id}")
+@foods.patch("/{food_id}")
 def update_food(food: Food, food_id: int):
     existing_food = food_table.get_food_by_id(food_id)
     if not existing_food:
         raise HTTPException(status_code=404, detail="Food not found")
 
     # Convertimos el objeto Food a un diccionario
-    food_data = food.model_dump()
+    food_dict = {
+        "name": food.name,
+        "price": food.price,
+        "created_at": food.created_at.isoformat(),
+        "description": food.description
+    }
 
     # Aquí comparamos los campos del objeto existente con los del objeto enviado
     updated_data = {}
-    for key, value in food_data.items():
+    for key, value in food_dict.items():
         if value != getattr(existing_food, key, None):
             updated_data[key] = value
 
