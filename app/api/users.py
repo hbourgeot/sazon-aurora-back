@@ -9,7 +9,7 @@ users = APIRouter()
 def get_users():
     res = user_table.get_user()
     users = res.data
-    return {"users": users}
+    return users
 
 
 @users.get("/{id}")
@@ -24,8 +24,7 @@ def create_user(user: User):
     try:
         user_dict = user.model_dump()
         result = user_table.upsert_user(user_dict)
-        res = {"data": result.data}
-        return res
+        return result.data
     except Exception as ex:
         return {"error": str(ex)}
 
