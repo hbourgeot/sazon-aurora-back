@@ -1,7 +1,7 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Form, UploadFile
 from app.schemas import Food
 from app.supabase.functions import foods as food_table, food_product as food_product_table
-
+from typing import Annotated
 foods = APIRouter()
 
 
@@ -19,7 +19,7 @@ def get_food(food_id: int):
 
 
 @foods.post("/new")
-def create_food(food: Food):
+def create_food(food: Annotated[Food, Form()], files: list[UploadFile]):
     try:
         food_dict = {
             "name": food.name,
