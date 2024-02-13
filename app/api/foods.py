@@ -29,6 +29,10 @@ def create_food(food: Annotated[Food, Form()], files: list[UploadFile]):
         }
         result = food_table.upsert_food(food_dict)
         
+        for i, file in enumerate(files):
+            res = food_table.upload_file(file, food.name, i)
+            print(res)
+        
         return result
     except Exception as ex:
         return {"error": str(ex)}, 500
@@ -78,3 +82,11 @@ def add_product_to_food(food_id: int, product_id: int, quantity: int = 1):
         return res
     except Exception as ex:
         return {"error": str(ex)}
+    
+def get_images_from_food(food: str, number: int):
+    try:
+        res = food_table.get_images_from_food(food, number)
+        return res
+    except Exception as ex:
+        return {"error": str(ex)}
+    
