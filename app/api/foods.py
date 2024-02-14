@@ -1,7 +1,9 @@
-from fastapi import APIRouter, HTTPException, Form, UploadFile
+from fastapi import APIRouter, HTTPException, Form, UploadFile, File
 from app.schemas import Food
 from app.supabase.functions import foods as food_table, food_product as food_product_table
-from typing import Annotated
+from datetime import datetime
+import traceback
+
 foods = APIRouter()
 
 
@@ -9,6 +11,9 @@ foods = APIRouter()
 @foods.get("/all")
 def get_foods():
     res = food_table.get_foods()
+    for food in res:
+        images = food_table.get_images_from_food(food["name"])
+        food["images"] = images
     return res
 
 
@@ -19,37 +24,45 @@ def get_food(food_id: int):
 
 
 @foods.post("/new")
-def create_food(food: Annotated[Food, Form()], files: list[UploadFile]):
+def create_food(name: str = Form(...),
+                price: float = Form(...),
+                created_at: datetime = Form(...),
+                description: str = Form(...),
+                files: list[UploadFile] = File(...)):
     try:
         food_dict = {
-            "name": food.name,
-            "price": food.price,
-            "created_at": food.created_at.isoformat(),
-            "description": food.description
+            "name": name,
+            "price": price,
+            "created_at": created_at.isoformat(),
+            "description": description
         }
         result = food_table.upsert_food(food_dict)
         
         for i, file in enumerate(files):
-            res = food_table.upload_file(file, food.name, i)
-            print(res)
+            food_table.upload_file(file, name, i)
         
         return result
     except Exception as ex:
+        print(ex)
         return {"error": str(ex)}, 500
 
 
 @foods.patch("/{food_id}")
-def update_food(food: Food, food_id: int):
+def update_food( food_id: int, name: str = Form(...),
+                price: float = Form(...),
+                created_at: datetime = Form(...),
+                description: str = Form(...),
+                files: list[UploadFile] = File(...)):
     existing_food = food_table.get_food_by_id(food_id)
     if not existing_food:
         raise HTTPException(status_code=404, detail="Food not found")
 
     # Convertimos el objeto Food a un diccionario
     food_dict = {
-        "name": food.name,
-        "price": food.price,
-        "created_at": food.created_at.isoformat(),
-        "description": food.description
+        "name": name,
+        "price": price,
+        "created_at": created_at.isoformat(),
+        "description": description
     }
 
     # Aquí comparamos los campos del objeto existente con los del objeto enviado
@@ -65,8 +78,13 @@ def update_food(food: Food, food_id: int):
     # Llamamos a la función de upsert con los datos actualizados
     try:
         res = food_table.upsert_food({"id": food_id, **updated_data})
+        
+        for i, file in enumerate(files):
+            food_table.upload_file(file, name, i)
+        
         return res
     except Exception as ex:
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(ex))
     
     
@@ -79,13 +97,6 @@ def add_product_to_food(food_id: int, product_id: int, quantity: int = 1):
             "amount": quantity
         }
         res = food_product_table.upsert_food_product(food_product_dict)
-        return res
-    except Exception as ex:
-        return {"error": str(ex)}
-    
-def get_images_from_food(food: str, number: int):
-    try:
-        res = food_table.get_images_from_food(food, number)
         return res
     except Exception as ex:
         return {"error": str(ex)}
