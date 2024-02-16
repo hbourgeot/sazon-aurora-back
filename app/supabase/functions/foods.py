@@ -4,7 +4,7 @@ from storage3.utils import StorageException
 
 def get_foods():
     res = supabase.table("foods").select(
-        """id, created_at, name, description, price, products:food_products (amount, product:product_id (id, name))""").execute()
+        """id, created_at, name, description, price, products:food_products (amount, product:product_id (id, name))""").gt("products.product.stock", 1).execute()
     return res.data
 
 def get_foods_without_products():

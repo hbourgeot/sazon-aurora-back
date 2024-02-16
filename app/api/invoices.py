@@ -1,12 +1,17 @@
 from fastapi import APIRouter
-
+from app.supabase.functions.invoice import get_sales
 inv = APIRouter()
 
 
 # Routes
 @inv.get("/all")
 def get_invoices():
-    return {"take": []}
+    total_sales = 0
+    sales = get_sales()
+    for sale in sales:
+        total_sales += sale["ventas"]
+    
+    return total_sales
 
 
 @inv.get("/{id}")

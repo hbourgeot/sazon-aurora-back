@@ -1,5 +1,6 @@
 from app.supabase import supabase
-
+from collections import Counter
+from datetime import datetime
 
 def get_foods_recommendations(user_id: int):
     res = supabase.table("invoices").select("*").eq("user_id", user_id).execute()
@@ -24,12 +25,24 @@ def get_foods_recommendations(user_id: int):
     return foods
 
 
-def get_food_by_id(food_id: int):
-    res = supabase.table("foods").select("*").eq("id", food_id)
-    print(res)
+def get_sales():
+    # Obtienes los datos de Supabase
+    res = supabase.table("invoices").select("created_at").execute()
 
+    # Verificas si la respuesta fue exitosa y tiene datos
+    if res.data:
+        # Conviertes las fechas a objetos date de Python
+        fechas = [datetime.fromisoformat(
+            registro['created_at']).date() for registro in res.data]
 
-def upsert_food(data):
-    res = supabase.table("foods").upsert(data)
-    print(res)
+        # Cuentas las ocurrencias de cada fecha
+        conteo_por_fecha = Counter(fechas)
 
+        # Si necesitas el resultado en un formato específico, puedes convertirlo aquí
+        # Por ejemplo, convertirlo en una lista de diccionarios
+        resultado = [{'fecha': fecha, 'ventas': conteo}
+                     for fecha, conteo in conteo_por_fecha.items()]
+        return resultado
+    else:
+        # Manejo de errores o datos vacíos
+        return {"error": "No se pudieron obtener los datos"}

@@ -3,7 +3,7 @@ from app.supabase import supabase
 
 def get_providers():
     res = supabase.table("providers").select("*").execute()
-    return res
+    return res.data
 
 
 def get_provider_by_id(provider_id: int):

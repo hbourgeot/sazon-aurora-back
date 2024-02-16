@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Response
+from app.supabase.functions.invoice import get_sales
 import numpy as np
 import matplotlib.pyplot as plt
 from io import BytesIO
@@ -8,8 +9,16 @@ graph = APIRouter()
 @graph.get('/ventas')
 async def obtener_grafico_ventas():
     # Generando datos aleatorios para el gráfico
-    dias = np.arange(1, 31)  # Días del mes
-    ventas = np.random.randint(100, 500, size=len(dias))  # Ventas aleatorias
+    dias = []  # Días del mes
+    ventas = [] 
+    sales = get_sales()  # Ventas aleatorias
+    for sale in sales:
+        fecha = sale['fecha']
+        fecha = fecha.strftime("%d-%m-%Y")
+        dias.append(fecha)
+        
+        venta = sale['ventas']
+        ventas.append(venta)
 
     # Creando el gráfico de barras con líneas
     plt.figure(figsize=(12, 6))

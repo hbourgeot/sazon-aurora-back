@@ -9,13 +9,7 @@ provs = APIRouter()
 @provs.get("/all")
 def get_provs():
     res = get_providers()
-    data = res.model_dump()
-    return {"providers": data["data"]}
-
-
-@provs.get("/{id}")
-def get_prov(id: int):
-    return {"take":id}
+    return res
 
 
 @provs.post("/new")
