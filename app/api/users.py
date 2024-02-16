@@ -1,6 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from app.schemas import User
 from app.supabase.functions import users as user_table
+from app.core.recommendations import CoreRecommendation
+import traceback
 users = APIRouter()
 
 
@@ -54,3 +56,17 @@ def update_user(user: User, user_id: int):
         return res
     except Exception as ex:
         raise HTTPException(status_code=500, detail=str(ex))
+
+
+@users.get("/{user_id}/recommendations")
+def get_recommendations(user_id: int):
+    try:
+        recommendations_foods = user_table.get_cart_and_invoice(user_id)
+        search = CoreRecommendation()
+        recommendations = search.recommended_products(recommendations_foods, top_k=3)
+        print(recommendations)
+        
+        return recommendations
+    except Exception as ex:
+        traceback.print_exc()
+        return {"error": str(ex)}

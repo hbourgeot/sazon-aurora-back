@@ -100,4 +100,10 @@ def add_product_to_food(food_id: int, product_id: int, quantity: int = 1):
         return res
     except Exception as ex:
         return {"error": str(ex)}
-    
+
+@foods.get("/{food_id}/images")
+def get_images_from_food(food_id: int):
+    food = food_table.get_food_by_id(food_id)
+    print(food)
+    res = food_table.get_images_from_food(food["name"])
+    return res
