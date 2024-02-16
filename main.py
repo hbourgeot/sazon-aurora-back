@@ -6,7 +6,9 @@ from app.api.providers import provs as providers_router
 from app.api.roles import roles as roles_router
 from app.api.users import users as users_router
 from app.api.graphics import graph as graph_router
+from dotenv import load_dotenv
 
+load_dotenv()
 app = FastAPI()
 
 # Routers

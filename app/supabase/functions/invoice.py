@@ -46,3 +46,9 @@ def get_sales():
     else:
         # Manejo de errores o datos vacíos
         return {"error": "No se pudieron obtener los datos"}
+
+def get_invoices_join_by_id(invoice_id: int):
+    res = supabase.table("invoices").select("created_at, total, user:user_id(id, name), details:invoice_details(id, quantity, price, food:food_id(id, name, description))").eq(
+        "id", invoice_id).limit(1).single().execute()
+    
+    return res.data

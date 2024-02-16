@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restaurant Menu</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+  .menu-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 700px;
+    margin: 40px auto;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    overflow: hidden;
+  }
+  .menu-header {
+    background-color: #ff4757;
+    color: #ffffff;
+    padding: 20px 30px;
+    text-align: center;
+  }
+  .menu-header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+  }
+  .menu-header p {
+    margin: 10px 0 0;
+    font-size: 1.1rem;
+  }
+  .menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eaeaea;
+    padding: 20px 30px;
+  }
+  .menu-item:first-child {
+    border-top: none;
+  }
+  .item-name {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0;
+  }
+  .item-description {
+    font-size: 1rem;
+    color: #666;
+    margin: 5px 0;
+  }
+  .item-price {
+    font-size: 1.5rem;
+    color: #ff4757;
+    margin: 0;
+  }
+  .menu-footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 15px 30px;
+    font-size: 1rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="menu-container">
+  <div class="menu-header">
+    <h1>Welcome to Our Restaurant</h1>
+    <p>Discover Our Delicious Dishes</p>
+  </div>
+
+  {% for food in foods %}
+  <div class="menu-item">
+    <div>
+      <div class="item-name">{{ food.name }}</div>
+      <div class="item-description">{{ food.description }}</div>
+    </div>
+    <div class="item-price">${{ food.price.toFixed(2) }}</div>
+  </div>
+  {% endfor %}
+
+  <div class="menu-footer">
+    Enjoy our specialties!
+  </div>
+</div>
+
+</body>
+</html>
