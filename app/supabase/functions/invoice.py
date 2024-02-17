@@ -1,6 +1,6 @@
 from app.supabase import supabase
 from collections import Counter
-from datetime import datetime
+from dateutil import parser
 
 def get_foods_recommendations(user_id: int):
     res = supabase.table("invoices").select("*").eq("user_id", user_id).execute()
@@ -32,7 +32,7 @@ def get_sales():
     # Verificas si la respuesta fue exitosa y tiene datos
     if res.data:
         # Conviertes las fechas a objetos date de Python
-        fechas = [datetime.fromisoformat(
+        fechas = [parser.parse(
             registro['created_at']).date() for registro in res.data]
 
         # Cuentas las ocurrencias de cada fecha
