@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.api.foods import foods as foods_router
 from app.api.invoices import inv as invoices_router
 from app.api.products import products as products_router
@@ -6,8 +7,17 @@ from app.api.providers import provs as providers_router
 from app.api.roles import roles as roles_router
 from app.api.users import users as users_router
 from app.api.graphics import graph as graph_router
+from dotenv import load_dotenv
 
+load_dotenv()
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Routers
 app.include_router(foods_router, prefix="/food", tags=["foods"])

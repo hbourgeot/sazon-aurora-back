@@ -1,11 +1,5 @@
 from app.supabase import supabase
 
-
-def get_food_productss():
-    res = supabase.table("food_products").select("*").execute()
-    print(res)
-
-
 def get_food_products_by_id(food_id: int, product_id: int):
     res = supabase.table("food_products").select("*").eq("food_id", food_id).eq("product_id", product_id).execute()
     return res.data
