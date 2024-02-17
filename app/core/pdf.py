@@ -10,7 +10,6 @@ wkhtmltopdf_path = os.getenv("BINPATH")
 config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
 
 def create_pdf_invoice(data: dict):
-    print(wkhtmltopdf_path, "PATH")
     template = templateEnv.get_template("invoice_template.html")
     html = template.render(invoice=data)
     pdf = pdfkit.from_string(html, options={"enable-local-file-access": True}, configuration=config)

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.schemas import User
-from app.supabase.functions import users as user_table
+from app.supabase.functions import users as user_table, foods as food_table
 from app.core.recommendations import CoreRecommendation
 import traceback
 users = APIRouter()
@@ -64,7 +64,9 @@ def get_recommendations(user_id: int):
         recommendations_foods = user_table.get_cart_and_invoice(user_id)
         search = CoreRecommendation()
         recommendations = search.recommended_products(recommendations_foods, top_k=3)
-        print(recommendations)
+        for recommendation in recommendations:
+            images = food_table.get_images_from_food(recommendation['name'])
+            recommendation["images"] = images
         
         return recommendations
     except Exception as ex:

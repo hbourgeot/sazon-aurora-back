@@ -93,8 +93,6 @@ def get_images_from_food(food: str):
             urls.append(url_response.removesuffix(
                 '?').replace("/images/", "/images/foods/"))
 
-            print(urls)
-
         return urls
     except Exception as ex:
         raise ex

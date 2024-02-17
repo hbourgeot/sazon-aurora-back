@@ -4,7 +4,6 @@ from app.supabase.functions.invoice import get_foods_recommendations as invoice_
 
 def get_user():
     res = supabase.table("users").select("*").execute()
-    print(res)
     return res
 
 
@@ -31,11 +30,9 @@ def get_cart_and_invoice(user_id: int):
 
 def get_user_by_id(user_id: int):
     res = supabase.table("users").select("*").eq("id", user_id).execute()
-    print(res)
     return res
 
 def upsert_user(data):
     res = supabase.table("users").upsert(data).execute()
-    print(res)
     return res
 

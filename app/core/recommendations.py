@@ -47,32 +47,25 @@ class CoreRecommendation:
 
     def extension_products_vector(self):
         if self.products and len(self.products) != 0:
-            print(f'Total products: {len(self.products)}')
             counter = 0
             for product in self.products:
                 counter += 1
-                print(f'product {counter} of {len(self.products)}')
                 text = self.get_text_for_product(product)
                 product['vector'] = self.embedding_openai(text)
-            print('Complete embeddings!')
             return True
-        print('Extension products vector EMPTY!')
         return False
 
     def recommended_products(self, products, top_k=2):
         text = ""
         for product in products:
             text += product + "\n"
-        print("Initializing the search")
         query_vector = self.embedding_sentence_transformers(text)
         # Asegúrate de que query_vector sea un ndarray antes de pasarlo
         query_vector = np.frombuffer(query_vector, dtype=np.float32)
         similar_products_ids = self.find_similar_products(query_vector, top_k)
-        print("Search finished")
         
         products = []
         for product_id, similarity in similar_products_ids:
-            print(f"Product ID: {product_id}, Similarity: {similarity}")
             products.append(self.get_product_by_id(product_id))
             
         return products

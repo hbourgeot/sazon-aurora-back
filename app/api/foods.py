@@ -17,9 +17,13 @@ def get_foods():
     return res
 
 
-@foods.get("/{id}")
+@foods.get("/{food_id}")
 def get_food(food_id: int):
     res = food_table.get_food_by_id(food_id)
+    images = food_table.get_images_from_food(res["name"])
+    print(images)
+    res["images"] = images
+    print(res)
     return res
 
 
